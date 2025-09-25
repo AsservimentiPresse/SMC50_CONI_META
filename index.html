@@ -1,34 +1,80 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>ASSIEME - AR Viewer</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <style>
-      body { margin: 0; background: #000; }
-      model-viewer { width: 95vw; height: 85vh; }
-         /* Ingrandisce il pulsante AR */
+<head>
+  <meta charset="utf-8">
+  <title>ASSIEME - AR Viewer</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body { 
+      margin: 0; 
+      background: #000; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+    }
+    model-viewer { 
+      width: 95vw; 
+      height: 85vh; 
+    }
+
+    /* Ingrandisce e colora il pulsante AR */
     model-viewer::part(default-ar-button) {
-      width: 120px;   /* puoi aumentare o diminuire */
+      width: 120px;
       height: 120px;
       border-radius: 50%;
-      backgroud-color: green;
-      color: green;
-      border: white;
+      background-color: green;
+      color: white;
+      border: none;
       font-size: 2.0rem;
     }
-    </style>
-  </head>
-  <body>
-    <model-viewer src="SMC50_C_9A.glb"
-                  ar
-                  ar-modes="webxr scene-viewer quick-look"
-                  camera-controls
-                  auto-rotate
-                  autoplay
-                  shadow-intensity="0"
-                  exposure="1"
-                  alt="ASSIEME 3D Model">
-    </model-viewer>
-  </body>
+
+    /* Pulsanti di controllo */
+    .controls {
+      margin: 15px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      color: white;
+    }
+    .green { background: green; }
+    .blue { background: blue; }
+    .yellow { background: goldenrod; }
+  </style>
+</head>
+<body>
+  <model-viewer id="viewer"
+    src="SMC50_C_9A.glb"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    auto-rotate
+    autoplay
+    shadow-intensity="0"
+    exposure="1"
+    alt="ASSIEME 3D Model">
+  </model-viewer>
+
+  <!-- Pulsanti per cambiare colore -->
+  <div class="controls">
+    <button class="green" onclick="changeColor('green')">Verde</button>
+    <button class="blue" onclick="changeColor('blue')">Blu</button>
+    <button class="yellow" onclick="changeColor('yellow')">Giallo</button>
+  </div>
+
+  <script>
+    const modelViewer = document.querySelector('#viewer');
+
+    async function changeColor(color) {
+      const material = modelViewer.model.materials[0]; // primo materiale del modello
+      if (material && material.pbrMetallicRoughness) {
+        material.pbrMetallicRoughness.setBaseColorFactor(color);
+      }
+    }
+  </script>
+</body>
 </html>
