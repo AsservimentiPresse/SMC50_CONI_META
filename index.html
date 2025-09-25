@@ -11,39 +11,62 @@
       display: flex; 
       flex-direction: column; 
       align-items: center; 
+      color: white;
+      font-family: sans-serif;
     }
     model-viewer { 
       width: 95vw; 
-      height: 85vh; 
+      height: 75vh; 
     }
 
-    /* Ingrandisce e colora il pulsante AR */
+    /* Pulsante AR */
     model-viewer::part(default-ar-button) {
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background-color: white;
+      background-color: green;
       color: white;
       border: none;
       font-size: 2.0rem;
     }
 
-    /* Pulsanti di controllo */
-    .controls {
-      margin: 15px 0;
+    /* Contenitore dei controlli */
+    .controls-section {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      width: 95vw;
     }
+
+    .controls-section h3 {
+      margin: 0;
+      margin-right: 15px;
+      font-size: 1.2rem;
+      min-width: 160px; /* spazio fisso a sinistra per i titoli */
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     button {
       padding: 10px 20px;
-      margin: 0 5px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
       color: white;
+      min-width: 80px;
     }
+
     .green { background: green; }
     .blue { background: blue; }
     .yellow { background: goldenrod; }
+    .lightgray { background: lightgray; color: black; }
+    .darkgray { background: dimgray; }
+    .red { background: red; }
   </style>
 </head>
 <body>
@@ -54,25 +77,44 @@
     camera-controls
     auto-rotate
     autoplay
-    shadow-intensity="1"
+    shadow-intensity="0"
     exposure="1"
     alt="ASSIEME 3D Model">
   </model-viewer>
 
-  <!-- Pulsanti per cambiare colore -->
-  <div class="controls">
-    <button class="green" onclick="changeColor('green')">Verde</button>
-    <button class="blue" onclick="changeColor([0/255, 79/255, 124/255, 1])">Blu</button>
-    <button class="yellow" onclick="changeColor('orange')">Giallo</button>
+  <!-- Prima fila: Structure color -->
+  <div class="controls-section">
+    <h3>Structure Color</h3>
+    <div class="controls">
+      <button class="green" onclick="changeColor(0, [0, 1, 0, 1])">Verde</button>
+      <button class="blue" onclick="changeColor(0, [0, 0, 1, 1])">Blu</button>
+      <button class="yellow" onclick="changeColor(0, [1, 1, 0, 1])">Giallo</button>
+      <button class="lightgray" onclick="changeColor(0, [0.83, 0.83, 0.83, 1])">Grigio chiaro</button>
+      <button class="darkgray" onclick="changeColor(0, [0.33, 0.33, 0.33, 1])">Grigio scuro</button>
+      <button class="red" onclick="changeColor(0, [1, 0, 0, 1])">Rosso</button>
+    </div>
+  </div>
+
+  <!-- Seconda fila: Mobile Parts color -->
+  <div class="controls-section">
+    <h3>Mobile Parts Color</h3>
+    <div class="controls">
+      <button class="green" onclick="changeColor(1, [0, 1, 0, 1])">Verde</button>
+      <button class="blue" onclick="changeColor(1, [0, 0, 1, 1])">Blu</button>
+      <button class="yellow" onclick="changeColor(1, [1, 1, 0, 1])">Giallo</button>
+      <button class="lightgray" onclick="changeColor(1, [0.83, 0.83, 0.83, 1])">Grigio chiaro</button>
+      <button class="darkgray" onclick="changeColor(1, [0.33, 0.33, 0.33, 1])">Grigio scuro</button>
+      <button class="red" onclick="changeColor(1, [1, 0, 0, 1])">Rosso</button>
+    </div>
   </div>
 
   <script>
     const modelViewer = document.querySelector('#viewer');
 
-    async function changeColor(color) {
-      const material = modelViewer.model.materials[0]; // primo materiale del modello
+    async function changeColor(materialIndex, rgba) {
+      const material = modelViewer.model.materials[materialIndex];
       if (material && material.pbrMetallicRoughness) {
-        material.pbrMetallicRoughness.setBaseColorFactor(color);
+        material.pbrMetallicRoughness.setBaseColorFactor(rgba);
       }
     }
   </script>
